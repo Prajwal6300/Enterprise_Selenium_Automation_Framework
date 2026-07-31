@@ -142,7 +142,7 @@ Enterprise_Selenium_Python_Automation_Framework/
 
 ---
 
-## ⚡ Quick Start & Installation
+## ⚡ Quick Start & Installation & run
 
 ### 1. Prerequisites
 - Python 3.10+ installed
@@ -167,6 +167,365 @@ source venv/bin/activate
 # Install dependencies
 pip install --upgrade pip
 pip install -r requirements.txt
+
+
+---
+
+# ▶️ Running the Framework
+
+After installing the dependencies, you can execute the framework using the following commands.
+
+## Verify Installation
+
+Check Python version:
+
+```bash
+python --version
+```
+
+Check pytest installation:
+
+```bash
+pytest --version
+```
+
+List all installed packages:
+
+```bash
+pip list
+```
+
+---
+
+## Run Complete Test Suite
+
+Execute all UI, API, and Database tests.
+
+```bash
+pytest
+```
+
+---
+
+## Run Tests with Chrome
+
+```bash
+pytest --browser=chrome
+```
+
+---
+
+## Run Chrome in Headless Mode
+
+```bash
+pytest --browser=chrome --headless
+```
+
+---
+
+## Run Firefox
+
+```bash
+pytest --browser=firefox
+```
+
+---
+
+## Run Microsoft Edge
+
+```bash
+pytest --browser=edge
+```
+
+---
+
+## Run BrowserStack Tests
+
+Set BrowserStack credentials.
+
+### Windows PowerShell
+
+```powershell
+$env:BROWSERSTACK_USERNAME="YOUR_USERNAME"
+$env:BROWSERSTACK_ACCESS_KEY="YOUR_ACCESS_KEY"
+```
+
+### Linux/macOS
+
+```bash
+export BROWSERSTACK_USERNAME="YOUR_USERNAME"
+export BROWSERSTACK_ACCESS_KEY="YOUR_ACCESS_KEY"
+```
+
+Execute:
+
+```bash
+pytest --browser=browserstack
+```
+
+---
+
+## Run Smoke Tests
+
+```bash
+pytest -m smoke
+```
+
+---
+
+## Run Regression Suite
+
+```bash
+pytest -m regression
+```
+
+---
+
+## Run API Tests
+
+```bash
+pytest tests/api/
+```
+
+or
+
+```bash
+pytest -m api
+```
+
+---
+
+## Run Database Tests
+
+```bash
+pytest tests/database/
+```
+
+or
+
+```bash
+pytest -m db
+```
+
+---
+
+## Run Specific Test File
+
+Example:
+
+```bash
+pytest tests/test_login.py
+```
+
+Run Checkout Tests
+
+```bash
+pytest tests/test_checkout.py
+```
+
+Run Search Tests
+
+```bash
+pytest tests/test_search.py
+```
+
+---
+
+## Run Specific Test Method
+
+```bash
+pytest tests/test_login.py::TestLogin::test_valid_user_login
+```
+
+---
+
+## Parallel Execution
+
+Automatically use all CPU cores.
+
+```bash
+pytest -n auto
+```
+
+Use four parallel workers.
+
+```bash
+pytest -n 4
+```
+
+Retry failed tests once.
+
+```bash
+pytest -n auto --reruns 1
+```
+
+---
+
+## Generate HTML Report
+
+```bash
+pytest --html=reports/report.html --self-contained-html
+```
+
+Generated report:
+
+```
+reports/report.html
+```
+
+---
+
+## Generate Allure Report
+
+Generate Allure results.
+
+```bash
+pytest --alluredir=reports/allure-results
+```
+
+Generate HTML report.
+
+```bash
+allure serve reports/allure-results
+```
+
+---
+
+## Generate JUnit XML Report
+
+```bash
+pytest --junitxml=reports/results.xml
+```
+
+---
+
+## Docker Execution
+
+Build Docker image.
+
+```bash
+docker build -t enterprise-selenium-framework .
+```
+
+Run framework inside Docker.
+
+```bash
+docker run --rm enterprise-selenium-framework
+```
+
+---
+
+## Docker Compose
+
+```bash
+docker-compose up --build
+```
+
+---
+
+## Jenkins
+
+The framework includes a production-ready Jenkins pipeline.
+
+Simply create a Pipeline Job and point Jenkins to the repository.
+
+Jenkins automatically performs:
+
+- Checkout Source Code
+- Install Dependencies
+- Execute Tests
+- Generate HTML Report
+- Generate Allure Report
+- Archive Reports
+- Publish Build Artifacts
+
+---
+
+## GitHub Actions
+
+Push the repository to GitHub.
+
+Every push or pull request automatically:
+
+- Installs Python
+- Installs dependencies
+- Executes Selenium tests
+- Generates reports
+- Uploads execution artifacts
+
+Workflow file:
+
+```
+.github/workflows/regression.yml
+```
+
+---
+
+## Generated Reports
+
+After every successful execution, the framework automatically generates:
+
+```
+reports/
+│
+├── dashboard.html
+├── report.html
+├── results.xml
+├── allure-results/
+└── allure-report/
+```
+
+---
+
+## Screenshots
+
+Whenever a UI test fails, screenshots are automatically captured.
+
+```
+screenshots/
+└── failures/
+```
+
+---
+
+## Logs
+
+Execution logs are automatically generated.
+
+```
+logs/
+└── automation.log
+```
+
+---
+
+## Expected Output
+
+Example:
+
+```
+====================================================
+Platform : Windows 11
+Python   : 3.13
+Browser  : Chrome
+Environment : QA
+
+Collected Tests : 18
+
+18 Passed
+0 Failed
+0 Skipped
+
+Execution Time : 01:08
+
+HTML Report Generated
+
+Enterprise Dashboard Generated
+
+Allure Results Generated
+
+====================================================
+```
 ```
 
 ---
