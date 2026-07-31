@@ -1,0 +1,19 @@
+userName: ${BROWSERSTACK_USERNAME}
+accessKey: ${BROWSERSTACK_ACCESS_KEY}
+framework: pytest
+platforms:
+  - os: Windows
+    osVersion: 11
+    browserName: Chrome
+    browserVersion: latest
+  - os: OS X
+    osVersion: Ventura
+    browserName: Safari
+    browserVersion: latest
+parallelsPerPlatform: 2
+browserstackLocal: false
+buildName: Python Selenium Automation Framework
+projectName: SauceDemo POM Framework
+debug: true
+networkLogs: true
+consoleLogs: info

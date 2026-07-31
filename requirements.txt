@@ -1,0 +1,27 @@
+# Core browser automation
+selenium>=4.23.0
+webdriver-manager>=4.0.2
+
+# Test runner and execution control
+pytest>=8.3.0
+pytest-xdist>=3.6.1
+pytest-rerunfailures>=14.0
+pytest-timeout>=2.3.1
+
+# Reports
+pytest-html>=4.1.1
+allure-pytest>=2.13.5
+
+# Test data
+openpyxl>=3.1.5
+pandas>=2.2.2
+PyYAML>=6.0.2
+
+# Database Validation
+SQLAlchemy>=2.0.0
+pymysql>=1.1.0
+
+# Environment and external integrations
+python-dotenv>=1.0.1
+requests>=2.32.3
+browserstack-local>=1.2.15

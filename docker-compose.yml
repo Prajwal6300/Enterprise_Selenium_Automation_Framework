@@ -1,0 +1,20 @@
+version: '3.8'
+
+services:
+  test-automation:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    container_name: selenium_python_framework
+    environment:
+      - BROWSER=chrome
+      - HEADLESS=true
+      - ENV=qa
+      - BROWSERSTACK_USERNAME=${BROWSERSTACK_USERNAME}
+      - BROWSERSTACK_ACCESS_KEY=${BROWSERSTACK_ACCESS_KEY}
+    volumes:
+      - ./reports:/app/reports
+      - ./screenshots:/app/screenshots
+      - ./logs:/app/logs
+    command: >
+      pytest --browser=chrome --headless -n 2 --reruns 1 --html=reports/html/report.html --alluredir=reports/allure-results
