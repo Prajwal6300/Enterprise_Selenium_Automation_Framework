@@ -5,7 +5,7 @@
 [![pytest](https://img.shields.io/badge/pytest-v9.1.1-yellow.svg)](https://docs.pytest.org/)
 [![License: MIT](https://img.shields.io/badge/License-MIT-purple.svg)](LICENSE)
 [![CI/CD Pipeline](https://img.shields.io/badge/CI%2FCD-GitHub%20Actions%20%7C%20Jenkins-orange.svg)](.github/workflows/regression.yml)
-[![Cloud Grid](https://img.shields.io/badge/Cloud%20Grid-BrowserStack-informational.svg)](browserstack.yml)
+[![Cloud Grid](https://img.shields.io/badge/Cloud%20Grid-BrowserStack-informational.svg)](browserstack.yml)   
 
 An **enterprise-grade, scalable, and modular test automation framework** built using **Python**, **Selenium WebDriver**, **pytest**, and the **Page Object Model (POM)** pattern.
 
