@@ -9,7 +9,7 @@
 
 An **enterprise-grade, scalable, and modular test automation framework** built using **Python**, **Selenium WebDriver**, **pytest**, and the **Page Object Model (POM)** pattern.
 
-This framework is designed for production Web UI testing, REST API automation, database data-integrity validation, cross-browser cloud execution (BrowserStack), Docker containerization, and continuous integration (Jenkins & GitHub Actions).
+This framework is designed for production Web UI testing, REST API automation, database data-integrity validation, cross-browser cloud execution (BrowserStack), Docker containerization, and continuous integration (Jenkins & GitHub Actions). 
 
 ---
 
