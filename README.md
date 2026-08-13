@@ -47,7 +47,7 @@ graph TD
         L[ProductPage]
         M[CartPage]
         N[CheckoutPage]
-    end
+    end   
 
     subgraph "Test Execution Suites"
         O[test_login.py]
