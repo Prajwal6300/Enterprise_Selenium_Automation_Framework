@@ -1,0 +1,8 @@
+first_name,last_name,postal_code,scenario
+John,Doe,10001,valid_us
+Emma,Watson,SW1A 1AA,valid_uk
+Raj,Patel,560001,valid_in
+,Doe,10001,missing_first_name
+John,,10001,missing_last_name
+John,Doe,,missing_postal_code
+,,,empty_all

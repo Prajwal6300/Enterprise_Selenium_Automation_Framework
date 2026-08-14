@@ -1,0 +1,34 @@
+{
+  "search_scenarios": [
+    {
+      "query": "Backpack",
+      "expected_match_count": 1,
+      "expected_product_name": "Sauce Labs Backpack"
+    },
+    {
+      "query": "T-Shirt",
+      "expected_match_count": 2,
+      "expected_product_name": "Sauce Labs Bolt T-Shirt"
+    },
+    {
+      "query": "sauce",
+      "expected_match_count": 5,
+      "expected_product_name": "Sauce Labs Backpack"
+    },
+    {
+      "query": "NON_EXISTENT_GADGET_XYZ",
+      "expected_match_count": 0,
+      "expected_product_name": null
+    },
+    {
+      "query": "12345",
+      "expected_match_count": 0,
+      "expected_product_name": null
+    },
+    {
+      "query": "!@#$%",
+      "expected_match_count": 0,
+      "expected_product_name": null
+    }
+  ]
+}

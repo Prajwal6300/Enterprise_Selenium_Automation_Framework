@@ -177,25 +177,93 @@ def pytest_runtest_makereport(item: pytest.Item, call: pytest.CallInfo):
         pass
 
     # Collect result data for Enterprise Dashboard Builder
-    result_entry = {
-        "name": item.name,
-        "file": file_path,
-        "status": report.outcome,
-        "duration": report.duration,
-        "categories": categories,
-        "screenshot_uri": screenshot_uri,
-        "error_message": str(report.longrepr) if report.failed else "",
-    }
-    SESSION_TEST_RESULTS.append(result_entry)
+    test_identifier = f"{file_path}::{item.name}"
+    if test_identifier not in [f"{r.get('file')}::{r.get('name')}" for r in SESSION_TEST_RESULTS]:
+        result_entry = {
+            "name": item.name,
+            "file": file_path,
+            "status": report.outcome,
+            "duration": report.duration,
+            "categories": categories,
+            "screenshot_uri": screenshot_uri,
+            "error_message": str(report.longrepr) if report.failed else "",
+        }
+        SESSION_TEST_RESULTS.append(result_entry)
+
+
+def pytest_runtest_logreport(report: pytest.TestReport) -> None:
+    """Collect test outcomes reported from pytest-xdist worker nodes to the controller."""
+    if report.when != "call" and not (report.when == "setup" and report.skipped):
+        return
+
+    nodeid = report.nodeid
+    file_path = nodeid.split("::")[0] if "::" in nodeid else nodeid
+    test_name = nodeid.split("::")[-1] if "::" in nodeid else nodeid
+
+    try:
+        file_path = os.path.relpath(file_path, str(ROOT_DIR))
+    except Exception:
+        pass
+
+    test_identifier = f"{file_path}::{test_name}"
+    existing_ids = [f"{r.get('file')}::{r.get('name')}" for r in SESSION_TEST_RESULTS]
+    if test_identifier not in existing_ids:
+        # Determine category from nodeid or path
+        categories = ["ui"]
+        if "api" in file_path.lower():
+            categories = ["api"]
+        elif "database" in file_path.lower() or "db" in file_path.lower():
+            categories = ["database", "db"]
+        elif "e2e" in file_path.lower():
+            categories = ["e2e"]
+
+        result_entry = {
+            "name": test_name,
+            "file": file_path,
+            "status": report.outcome,
+            "duration": getattr(report, "duration", 0.0),
+            "categories": categories,
+            "screenshot_uri": "",
+            "error_message": str(report.longrepr) if report.failed else "",
+        }
+        SESSION_TEST_RESULTS.append(result_entry)
 
 
 def pytest_sessionfinish(session: pytest.Session, exitstatus: int) -> None:
-    """Generate standalone Grafana/Datadog-style Enterprise Analytics Dashboard HTML report."""
+    """Generate standalone Grafana/Datadog-style Enterprise Analytics Dashboard HTML report and normalized JSON telemetry."""
+    # Guard: Do not run on pytest-xdist worker nodes; execute only on master process
+    if hasattr(session.config, "workerinput"):
+        return
+
     session_duration = time.time() - SESSION_START_TIME
-    builder = EnterpriseDashboardBuilder(output_path="reports/dashboard.html")
-    builder.build_dashboard(
-        test_results=SESSION_TEST_RESULTS,
-        session_duration=session_duration,
-        env="QA",
-        browser="Chrome"
-    )
+    env_arg = session.config.getoption("--env") if hasattr(session.config, "getoption") else "qa"
+    browser_arg = session.config.getoption("--browser") if hasattr(session.config, "getoption") else "chrome"
+    env_name = (env_arg or "qa").upper()
+    browser_name = (browser_arg or "chrome").capitalize()
+
+    # 1. Generate Standalone Executive HTML Dashboard
+    try:
+        builder = EnterpriseDashboardBuilder(output_path="reports/dashboard.html")
+        builder.build_dashboard(
+            test_results=SESSION_TEST_RESULTS,
+            session_duration=session_duration,
+            env=env_name,
+            browser=browser_name,
+        )
+    except Exception as e:
+        print(f"[Warning] Failed to generate dashboard.html: {e}")
+
+    # 2. Export Normalized JSON Telemetry for Web QA Dashboard & Vercel
+    try:
+        from src.reports.json_exporter import JSONExporter
+        exporter = JSONExporter()
+        exporter.export_session(
+            test_results=SESSION_TEST_RESULTS,
+            session_duration=session_duration,
+            env=env_name,
+            browser=browser_name,
+        )
+    except Exception as e:
+        print(f"[Warning] Failed to export JSON execution telemetry: {e}")
+
+

@@ -1,0 +1,52 @@
+{
+  "valid_users": [
+    {
+      "username": "standard_user",
+      "password": "secret_sauce",
+      "expected_url_contains": "inventory.html",
+      "role": "standard"
+    },
+    {
+      "username": "problem_user",
+      "password": "secret_sauce",
+      "expected_url_contains": "inventory.html",
+      "role": "problem"
+    }
+  ],
+  "invalid_users": [
+    {
+      "username": "invalid_user",
+      "password": "invalid_password",
+      "expected_error": "Username and password do not match"
+    },
+    {
+      "username": "standard_user",
+      "password": "wrong_password",
+      "expected_error": "Username and password do not match"
+    }
+  ],
+  "locked_users": [
+    {
+      "username": "locked_out_user",
+      "password": "secret_sauce",
+      "expected_error": "Epic sadface: Sorry, this user has been locked out."
+    }
+  ],
+  "empty_credentials": [
+    {
+      "username": "",
+      "password": "secret_sauce",
+      "expected_error": "Epic sadface: Username is required"
+    },
+    {
+      "username": "standard_user",
+      "password": "",
+      "expected_error": "Epic sadface: Password is required"
+    },
+    {
+      "username": "",
+      "password": "",
+      "expected_error": "Epic sadface: Username is required"
+    }
+  ]
+}

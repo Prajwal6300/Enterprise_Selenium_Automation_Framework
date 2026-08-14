@@ -11,6 +11,9 @@ from typing import Any, Dict, Optional
 import requests
 from requests import Response
 
+from urllib3.util import Retry
+from requests.adapters import HTTPAdapter
+
 from src.utils.logger import get_logger
 
 logger = get_logger("APIClient")
@@ -19,15 +22,26 @@ logger = get_logger("APIClient")
 class APIClient:
     """Base HTTP Client for executing RESTful API calls with enterprise capabilities."""
 
-    def __init__(self, base_url: str, token: Optional[str] = None) -> None:
-        """Initialize API client with base URL and optional Bearer token.
+    def __init__(self, base_url: str, token: Optional[str] = None, timeout: int = 15) -> None:
+        """Initialize API client with base URL, timeout, and optional Bearer token.
 
         Args:
             base_url: Base endpoint URL (e.g. https://reqres.in)
             token: Optional Bearer authentication token string
+            timeout: Request timeout in seconds
         """
         self.base_url = base_url.rstrip("/")
+        self.timeout = timeout
         self.session = requests.Session()
+        retries = Retry(
+            total=3,
+            backoff_factor=0.5,
+            status_forcelist=[429, 500, 502, 503, 504],
+            raise_on_status=False
+        )
+        adapter = HTTPAdapter(max_retries=retries)
+        self.session.mount("http://", adapter)
+        self.session.mount("https://", adapter)
         self.headers: Dict[str, str] = {
             "Content-Type": "application/json",
             "Accept": "application/json",
@@ -45,7 +59,7 @@ class APIClient:
         url = f"{self.base_url}/{endpoint.lstrip('/')}"
         req_headers = {**self.headers, **(headers or {})}
         logger.info("Sending GET request to %s with params %s", url, params)
-        response = self.session.get(url, params=params, headers=req_headers, timeout=10)
+        response = self.session.get(url, params=params, headers=req_headers, timeout=self.timeout)
         self._log_response(response)
         return response
 
@@ -54,7 +68,7 @@ class APIClient:
         url = f"{self.base_url}/{endpoint.lstrip('/')}"
         req_headers = {**self.headers, **(headers or {})}
         logger.info("Sending POST request to %s with payload %s", url, data)
-        response = self.session.post(url, json=data, headers=req_headers, timeout=10)
+        response = self.session.post(url, json=data, headers=req_headers, timeout=self.timeout)
         self._log_response(response)
         return response
 
@@ -63,7 +77,7 @@ class APIClient:
         url = f"{self.base_url}/{endpoint.lstrip('/')}"
         req_headers = {**self.headers, **(headers or {})}
         logger.info("Sending PUT request to %s with payload %s", url, data)
-        response = self.session.put(url, json=data, headers=req_headers, timeout=10)
+        response = self.session.put(url, json=data, headers=req_headers, timeout=self.timeout)
         self._log_response(response)
         return response
 
@@ -72,7 +86,7 @@ class APIClient:
         url = f"{self.base_url}/{endpoint.lstrip('/')}"
         req_headers = {**self.headers, **(headers or {})}
         logger.info("Sending DELETE request to %s", url)
-        response = self.session.delete(url, headers=req_headers, timeout=10)
+        response = self.session.delete(url, headers=req_headers, timeout=self.timeout)
         self._log_response(response)
         return response
 

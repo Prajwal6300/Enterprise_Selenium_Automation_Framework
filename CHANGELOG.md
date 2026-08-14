@@ -6,6 +6,28 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 
 ---
 
+## [Unreleased]
+
+### Added
+- **Complete documentation set** under `docs/`:
+  - `architecture.md` — layered architecture, directory-to-layer mapping, runtime flow.
+  - `installation.md` — prerequisites, venv setup, dependency installation, optional Allure/Docker/BrowserStack setup.
+  - `configuration.md` — `src/config/config.ini` sections, environment variables, precedence, environment switching.
+  - `test-execution.md` — every execution mode, marker reference, parallel/retry/timeout options.
+  - `test-cases.md` — full source-derived test-case matrix (181 tests).
+  - `test-data.md` — Excel/JSON/CSV datasets and loading API.
+  - `reporting.md` — dashboard, HTML, JUnit, Allure, JSON telemetry.
+  - `browserstack.md`, `docker.md`, `jenkins.md`, `github-actions.md` — integration guides.
+  - `troubleshooting.md`, `development-guide.md`, `faq.md` — support and contribution guides.
+- **README rewrite**: accurate test count (181), correct config path (`src/config/config.ini`), corrected structure (no `src/pages/base_page.py`), security section, and quick-reference commands.
+- **CHANGELOG / CONTRIBUTING refresh** matching the actual implementation and repository state.
+
+### Changed
+- Consolidated `docs/` into a single clean, non-duplicating documentation structure (removed the older `test_execution.md`, `browserstack_guide.md`, `ci_cd.md`, and `docker_guide.md` placeholders).
+- Corrected documentation claims that did not match the source code (e.g., hardcoded Selenium version badge, nonexistent `config/config.ini`, nonexistent `src/pages/base_page.py`).
+
+---
+
 ## [2.5.0-Enterprise] - 2026-07-31
 
 ### Added

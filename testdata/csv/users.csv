@@ -1,0 +1,6 @@
+username,password,role,expected_result
+standard_user,secret_sauce,standard,login_success
+problem_user,secret_sauce,problem,login_success
+visual_user,secret_sauce,visual,login_success
+invalid_user,invalid_password,invalid,login_failure
+locked_out_user,secret_sauce,locked,login_failure

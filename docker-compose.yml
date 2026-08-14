@@ -16,5 +16,6 @@ services:
       - ./reports:/app/reports
       - ./screenshots:/app/screenshots
       - ./logs:/app/logs
-    command: >
-      pytest --browser=chrome --headless -n 2 --reruns 1 --html=reports/html/report.html --alluredir=reports/allure-results
+command: >
+  pytest --browser=${BROWSER} --headless -n 2 --reruns 1 \
+    --html=reports/html/report.html --alluredir=reports/allure-results

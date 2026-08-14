@@ -1,0 +1,16 @@
+{
+  "name": "enterprise-selenium-automation-platform",
+  "version": "2.5.0",
+  "private": true,
+  "scripts": {
+    "dev": "npm --prefix dashboard run dev",
+    "build": "npm --prefix dashboard run build",
+    "start": "npm --prefix dashboard run start",
+    "sync-results": "python scripts/sync_results.py",
+    "test:api": "pytest tests/api tests/database",
+    "test:ui": "pytest tests/test_login.py --browser=chrome --headless",
+    "test:all": "pytest --browser=chrome --headless"
+  },
+  "dependencies": {},
+  "devDependencies": {}
+}

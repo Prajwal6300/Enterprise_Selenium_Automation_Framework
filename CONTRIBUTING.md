@@ -14,8 +14,8 @@ Maintain professional, respectful, and constructive communication across all pul
 
 1. **Fork & Clone the Repository**:
    ```bash
-   git clone https://github.com/your-username/web-automation-framework.git
-   cd web-automation-framework
+   git clone https://github.com/your-username/Enterprise_Selenium_Python_Automation_Framework.git
+   cd Enterprise_Selenium_Python_Automation_Framework
    ```
 
 2. **Create a Virtual Environment**:
@@ -50,10 +50,10 @@ Before submitting a Pull Request, verify that all test suites pass cleanly:
 
 ```bash
 # Run full suite headlessly
-pytest --headless
+pytest --browser=chrome --headless
 
 # Run smoke suite
-pytest -m smoke --headless
+pytest -m smoke --browser=chrome --headless
 
 # Run API suite
 pytest -m api
@@ -61,6 +61,8 @@ pytest -m api
 # Run DB suite
 pytest -m db
 ```
+
+> The suite contains **181 collected test cases**. Verify your changes collect cleanly with `pytest --collect-only -q` before opening a PR.
 
 ---
 

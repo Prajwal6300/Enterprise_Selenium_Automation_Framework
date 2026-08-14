@@ -26,7 +26,7 @@ on:
 
 jobs:
   test:
-    name: Execute Test Suite
+    name: Execute Selenium & API Test Suite
     runs-on: ubuntu-latest
 
     steps:
@@ -44,15 +44,42 @@ jobs:
           sudo apt-get update
           sudo apt-get install -y google-chrome-stable
 
+      - name: Install Firefox ESR
+        if: inputs.browser == 'firefox' || inputs.browser == 'chrome'
+        run: |
+          sudo apt-get update
+          sudo apt-get install -y firefox-esr
+
+      - name: Install Microsoft Edge
+        if: inputs.browser == 'edge'
+        run: |
+          curl -sSL https://packages.microsoft.com/keys/microsoft.asc | sudo apt-key --keyring /etc/apt/trusted.gpg.d/microsoft.gpg add -
+          sudo add-apt-repository "deb [arch=amd64] https://packages.microsoft.com/repos/edge/ stable main"
+          sudo apt-get update
+          sudo apt-get install -y microsoft-edge-stable
+
       - name: Install Python Dependencies
         run: |
           python -m pip install --upgrade pip
           pip install -r requirements.txt
 
       - name: Execute Pytest Automation Suite
+        env:
+          CI_SYSTEM: GitHub Actions
+          HEADLESS: ${{ inputs.headless }}
         run: |
-          pytest --browser=${{ inputs.browser || 'chrome' }} --headless -n 2 --reruns 1 --html=reports/html/report.html --alluredir=reports/allure-results
-        continue-on-error: true
+          HEADLESS_FLAG=""
+          if [ "${HEADLESS}" = "True" ] || [ "${HEADLESS}" = "true" ]; then
+            HEADLESS_FLAG="--headless"
+          fi
+          pytest --browser=${{ inputs.browser || 'chrome' }} ${HEADLESS_FLAG} -n 2 --reruns 1 --html=reports/html/report.html --alluredir=reports/allure-results --junitxml=reports/junit/results.xml
+
+      - name: Upload Executive HTML Dashboard Artifact
+        uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: executive-dashboard
+          path: reports/dashboard.html
 
       - name: Upload HTML Test Report Artifact
         uses: actions/upload-artifact@v4
@@ -60,6 +87,20 @@ jobs:
         with:
           name: html-test-report
           path: reports/html/
+
+      - name: Upload JUnit XML Results
+        uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: junit-xml-results
+          path: reports/junit/
+
+      - name: Upload JSON Execution Telemetry
+        uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: execution-telemetry
+          path: reports/executions/
 
       - name: Upload Allure Results Artifact
         uses: actions/upload-artifact@v4

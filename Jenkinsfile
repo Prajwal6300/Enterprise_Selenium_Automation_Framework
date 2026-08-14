@@ -19,7 +19,7 @@ pipeline {
 
         stage('Setup') {
             steps {
-                sh 'python3 -m venv .venv'
+                sh 'python -m venv .venv'
                 sh '. .venv/bin/activate && pip install --upgrade pip && pip install -r requirements.txt'
             }
         }
@@ -28,7 +28,7 @@ pipeline {
             steps {
                 script {
                     def headlessFlag = params.HEADLESS ? '--headless' : ''
-                    sh ". .venv/bin/activate && pytest --browser=${params.BROWSER} ${headlessFlag} -n auto --reruns 1 --junitxml=reports/junit.xml"
+                    sh ". .venv/bin/activate && pytest --browser=${params.BROWSER} ${headlessFlag} -n auto --reruns 1 --junitxml=reports/junit/results.xml"
                 }
             }
         }
@@ -45,7 +45,7 @@ pipeline {
                 allowMissing: true
             ])
             archiveArtifacts artifacts: 'screenshots/**/*.png, logs/**/*.log, reports/**/*', allowEmptyArchive: true
-            junit allowEmptyResults: true, testResults: 'reports/junit.xml'
+            junit allowEmptyResults: true, testResults: 'reports/junit/results.xml'
         }
     }
 }

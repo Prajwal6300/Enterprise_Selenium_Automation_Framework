@@ -82,6 +82,56 @@ class TestAPIWorkflow:
         APIClient.validate_status_code(response, 200)
         logger.info("DELETE user test passed")
 
+    def test_get_single_resource_and_schema_validation(self):
+        """Verify GET by ID returns valid schema with id, title, body, and userId keys."""
+        logger.info("Executing test_get_single_resource_and_schema_validation")
+        response = self.api_service.get_user_by_id(post_id=1)
+        
+        APIClient.validate_status_code(response, 200)
+        data = response.json()
+        assert isinstance(data, dict), "Response must be a JSON object"
+        for required_key in ["id", "title", "body", "userId"]:
+            assert required_key in data, f"Required schema key '{required_key}' missing from API response"
+        assert data["id"] == 1, f"Expected post id 1, got {data['id']}"
+        logger.info("test_get_single_resource_and_schema_validation passed")
+
+    def test_get_invalid_endpoint_returns_404(self):
+        """Verify sending request to non-existent endpoint returns HTTP 404 Not Found."""
+        logger.info("Executing test_get_invalid_endpoint_returns_404")
+        client = APIClient(base_url="https://jsonplaceholder.typicode.com")
+        response = client.get("non_existent_resource_endpoint_xyz")
+        
+        assert response.status_code == 404, f"Expected 404 for invalid endpoint, got {response.status_code}"
+        logger.info("test_get_invalid_endpoint_returns_404 passed")
+
+    def test_get_invalid_resource_id_returns_404(self):
+        """Verify requesting non-existent record ID returns HTTP 404."""
+        logger.info("Executing test_get_invalid_resource_id_returns_404")
+        response = self.api_service.get_user_by_id(post_id=9999999)
+        
+        assert response.status_code == 404, f"Expected 404 for non-existent resource ID, got {response.status_code}"
+        logger.info("test_get_invalid_resource_id_returns_404 passed")
+
+    def test_api_response_headers_and_content_type(self):
+        """Verify API response contains Content-Type application/json header."""
+        logger.info("Executing test_api_response_headers_and_content_type")
+        response = self.api_service.get_users(user_id=1)
+        
+        APIClient.validate_status_code(response, 200)
+        content_type = response.headers.get("Content-Type", "")
+        assert "application/json" in content_type, f"Expected JSON Content-Type header, got '{content_type}'"
+        logger.info("test_api_response_headers_and_content_type passed")
+
+    def test_api_response_time_threshold(self):
+        """Verify API response is returned within performance SLA threshold (< 3000ms)."""
+        logger.info("Executing test_api_response_time_threshold")
+        response = self.api_service.get_user_by_id(post_id=1)
+        
+        APIClient.validate_status_code(response, 200)
+        elapsed_seconds = response.elapsed.total_seconds()
+        assert elapsed_seconds < 3.0, f"API response exceeded 3.0s SLA limit: {elapsed_seconds}s"
+        logger.info("test_api_response_time_threshold passed in %0.3fs", elapsed_seconds)
+
     def test_bearer_token_authorization_header(self):
         """Verify setting bearer token properly formats authorization request header."""
         logger.info("Executing test_bearer_token_authorization_header")
@@ -92,3 +142,4 @@ class TestAPIWorkflow:
             "Authorization header failed to format Bearer token string"
         )
         logger.info("Bearer token test passed")
+
