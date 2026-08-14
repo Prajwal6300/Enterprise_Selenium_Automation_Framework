@@ -118,7 +118,7 @@ Enterprise_Selenium_Python_Automation_Framework/
 ├── testdata/
 │   ├── Login.xlsx                  # User authentication Excel dataset
 │   └── Products.xlsx               # Inventory product Excel dataset
-├── tests/
+├── tests/ 
 │   ├── api/
 │   │   └── test_api_workflow.py   # REST API automation tests
 │   ├── database/
