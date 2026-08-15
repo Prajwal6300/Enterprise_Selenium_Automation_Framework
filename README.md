@@ -87,7 +87,7 @@ It is designed for:
 
 It solves the common problem of ad-hoc, throwaway test scripts by providing:
 
-- A **Page Object Model (POM)** with all locators encapsulated in dedicated page classes.
+- A **Page Object Model (POM)** with all locators encapsulated in dedicated page classes.    
 - **Deterministic synchronization** with explicit waits (zero hardcoded `time.sleep()`).
 - **Multi-format test data** (Excel, JSON, CSV) with a unified `DataProvider`.
 - **REST API** and **database** validation layers alongside Selenium UI tests.
